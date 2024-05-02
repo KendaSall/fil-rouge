@@ -1,16 +1,41 @@
 pipeline {
-    agent any  // Définit l'agent sur "none" pour indiquer que le pipeline s'exécute sur le nœud maître
-
+    agent any
+    environment {
+        DOCKER_COMPOSE_VERSION = '1.29.2'
+    }
     stages {
-     stage("test"){
-             steps{
-                 echo "hello world"
-             }
-         }
-        stage("build"){
-             steps{
-                 bash "docker-compose up -d"
-             }
-         }
+        stage('Build') {
+            steps {
+                script {
+                    // Téléchargement de Docker Compose
+                    sh "curl -L \"https://github.com/docker/compose/releases/download/\${DOCKER_COMPOSE_VERSION}/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose"
+                    sh "chmod +x /usr/local/bin/docker-compose"
+                    // Lancement de Docker Compose
+                    sh 'docker-compose up -d --build'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    // Mettez ici vos commandes pour exécuter des tests
+                    echo "Running tests"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    // Mettez ici vos commandes pour déployer l'application
+                    echo "Deploying to production"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // Nettoyer les ressources Docker
+            sh 'docker-compose down'
+        }
     }
 }
