@@ -8,10 +8,10 @@ pipeline {
             steps {
                 script {
                     // Téléchargement de Docker Compose
-                    sh "curl -L \"https://github.com/docker/compose/releases/download/\${DOCKER_COMPOSE_VERSION}/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose"
-                    sh "chmod +x /usr/local/bin/docker-compose"
+                    bat "curl -L \"https://github.com/docker/compose/releases/download/\${DOCKER_COMPOSE_VERSION}/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose"
+                    bat "chmod +x /usr/local/bin/docker-compose"
                     // Lancement de Docker Compose
-                    sh 'docker-compose up -d --build'
+                    bat 'docker-compose up -d --build'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
     post {
         always {
             // Nettoyer les ressources Docker
-            sh 'docker-compose down'
+            bat 'docker-compose down'
         }
     }
 }
