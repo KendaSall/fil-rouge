@@ -7,5 +7,10 @@ pipeline {
                  echo "hello world"
              }
          }
+        stage("build"){
+             steps{
+                 bat "docker-compose up -d"
+             }
+         }
     }
 }
